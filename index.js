@@ -41,9 +41,34 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Write your code here//
 
 //CHALLENGE 1: GET All posts
-
+app.get('/posts', (req, res) => {
+  if (posts.length === 0) {
+    return res.status(404)
+              .json("Posts not found");
+  } else {
+    res.status(200)
+        .json(posts);
+  }
+});
 //CHALLENGE 2: GET a specific post by id
+app.get('/posts/:postId', (req, res) => {
+  const postId = parseInt(req.params.postId, 10);
 
+  if (isNaN(postId)) {
+    return res.status(400)
+              .json("Invalid post id. Must be a number.");
+  }
+
+  const foundPost = posts.filter((post) => post.id === postId);
+
+  if (foundPost) {
+    res.status(200)
+       .json(foundPost);
+  } else {
+    res.status(404)
+       .json("Post not found");
+  }
+})
 //CHALLENGE 3: POST a new post
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
