@@ -43,8 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //CHALLENGE 1: GET All posts
 app.get('/posts', (req, res) => {
   if (posts.length === 0) {
-    return res.status(404)
-              .json("Posts not found");
+    return res.status(404).json("Posts not found");
   } else {
     res.status(200)
         .json(posts);
@@ -55,8 +54,7 @@ app.get('/posts/:postId', (req, res) => {
   const postId = parseInt(req.params.postId, 10);
 
   if (isNaN(postId)) {
-    return res.status(400)
-              .json("Invalid post id. Must be a number.");
+    return res.status(400).json("Invalid post id. Must be a number.");
   }
 
   const foundPost = posts.find((post) => post.id === postId);
@@ -106,6 +104,49 @@ app.post('/posts', (req, res) => {
 })
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
+app.patch('/posts/:postId', (req, res) => {
+  const postId = parseInt(req.params.postId, 10);
+  const postTitle = req.body.title;
+  const postContent = req.body.content;
+  const postAuthor = req.body.author;
+
+  if (isNaN(postId)) {
+    return res.status(400).json("Invalid post id. Must be a number.");
+  }
+
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).json("Request body cannot be empty.");
+  }
+
+  if (req.body.title && (typeof req.body.title !== "string" || req.body.title.trim().length === 0)) {
+    return res.status(400).json("Title must be a non-empty string.");
+  }
+
+  if (req.body.content && (typeof req.body.content !== "string" || req.body.content.trim().length === 0)) {
+    return res.status(400).json("Content must be a non-empty string.");
+  }
+
+  if (req.body.author && (typeof req.body.author !== "string" || req.body.author.trim().length === 0)) {
+    return res.status(400).json("Author must be a non-empty string.");
+  }
+
+  const existingPostIndex = posts.findIndex(post => post.id === postId);
+
+  if (existingPostIndex === -1) {
+    return res.status(404).json("Post not found");
+  }
+  
+  const existingPost = posts[existingPostIndex];
+  const patchedPost = { ...existingPost };
+
+  
+  patchedPost.title = postTitle || patchedPost.title;
+  patchedPost.content = postContent || patchedPost.content;
+  patchedPost.author = postAuthor || patchedPost.author;
+
+  posts[existingPostIndex] = patchedPost;
+  res.status(200).json("Post has been patched.")
+});
 
 //CHALLENGE 5: DELETE a specific post by providing the post id.
 
