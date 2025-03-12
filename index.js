@@ -59,7 +59,7 @@ app.get('/posts/:postId', (req, res) => {
               .json("Invalid post id. Must be a number.");
   }
 
-  const foundPost = posts.filter((post) => post.id === postId);
+  const foundPost = posts.find((post) => post.id === postId);
 
   if (foundPost) {
     res.status(200)
@@ -70,6 +70,40 @@ app.get('/posts/:postId', (req, res) => {
   }
 })
 //CHALLENGE 3: POST a new post
+app.post('/posts', (req, res) => {
+  const newId = posts.length + 1;
+  const newPostTitle = req.body.title;
+  const newPostContent = req.body.content;
+  const newPostAuthor = req.body.author;
+  const newPostDate = new Date().toISOString();
+
+  if (
+    typeof newPostTitle !== "string" || 
+    typeof newPostContent !== "string" || 
+    typeof newPostAuthor !== "string"
+  ) {
+    return res.status(400).json("Title, Content and Author must be strings.")
+  }
+  
+  if (
+    newPostTitle.trim().length === 0 || 
+    newPostContent.trim().length === 0 || 
+    newPostAuthor.trim().length === 0
+  ) {
+    return res.status(400).json("Title, Content and Author must not be empty.")
+  }
+
+  const newPost = {
+    id: newId,
+    title: newPostTitle,
+    content: newPostContent,
+    author: newPostAuthor,
+    date: newPostDate
+  }
+
+  posts.push(newPost);
+  res.status(201).json("New post has been created.")
+})
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
 
