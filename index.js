@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 const app = express();
 const port = 4000;
 
-// In-memory data store
 let posts = [
   {
     id: 1,
@@ -32,15 +31,6 @@ let posts = [
   },
 ];
 
-let lastId = 3;
-
-// Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-//Write your code here//
-
-//CHALLENGE 1: GET All posts
 app.get('/posts', (req, res) => {
   if (posts.length === 0) {
     return res.status(404).json("Posts not found.");
@@ -49,7 +39,7 @@ app.get('/posts', (req, res) => {
         .json(posts);
   }
 });
-//CHALLENGE 2: GET a specific post by id
+
 app.get('/posts/:postId', (req, res) => {
   const postId = parseInt(req.params.postId, 10);
 
@@ -67,7 +57,7 @@ app.get('/posts/:postId', (req, res) => {
        .json("Post not found");
   }
 })
-//CHALLENGE 3: POST a new post
+
 app.post('/posts', (req, res) => {
   const newId = posts.length + 1;
   const newPostTitle = req.body.title;
@@ -103,7 +93,6 @@ app.post('/posts', (req, res) => {
   res.status(201).json("New post has been created.")
 })
 
-//CHALLENGE 4: PATCH a post when you just want to update one parameter
 app.patch('/posts/:postId', (req, res) => {
   const postId = parseInt(req.params.postId, 10);
   const postTitle = req.body.title;
@@ -148,7 +137,6 @@ app.patch('/posts/:postId', (req, res) => {
   res.status(200).json("Post has been patched.")
 });
 
-//CHALLENGE 5: DELETE a specific post by providing the post id.
 app.delete('/posts/:postId', (req, res) => {
   const postId = parseInt(req.params.postId, 10);
 
