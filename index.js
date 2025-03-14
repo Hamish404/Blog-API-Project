@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //CHALLENGE 1: GET All posts
 app.get('/posts', (req, res) => {
   if (posts.length === 0) {
-    return res.status(404).json("Posts not found");
+    return res.status(404).json("Posts not found.");
   } else {
     res.status(200)
         .json(posts);
@@ -133,7 +133,7 @@ app.patch('/posts/:postId', (req, res) => {
   const existingPostIndex = posts.findIndex(post => post.id === postId);
 
   if (existingPostIndex === -1) {
-    return res.status(404).json("Post not found");
+    return res.status(404).json("Post not found.");
   }
   
   const existingPost = posts[existingPostIndex];
@@ -149,6 +149,22 @@ app.patch('/posts/:postId', (req, res) => {
 });
 
 //CHALLENGE 5: DELETE a specific post by providing the post id.
+app.delete('/posts/:postId', (req, res) => {
+  const postId = parseInt(req.params.postId, 10);
+
+  if (isNaN(postId)) {
+    return res.status(400).json("Invalid post id. Must be a number.");
+  }
+
+  const existingPostIndex = posts.findIndex(post => post.id === postId);
+
+  if (existingPostIndex === -1) {
+    return res.status(404).json("Post not found.");
+  }
+
+  posts.splice(existingPostIndex, 1);
+  return res.status(200).json("Post has been deleted.");
+})
 
 app.listen(port, () => {
   console.log(`API is running at http://localhost:${port}`);
