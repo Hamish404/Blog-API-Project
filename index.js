@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 const app = express();
 const port = 4000;
 
+app.use(bodyParser.json());
+
 let posts = [
   {
     id: 1,
@@ -33,7 +35,7 @@ let posts = [
 
 app.get('/posts', (req, res) => {
   if (posts.length === 0) {
-    return res.status(404).json("Posts not found.");
+    return res.status(200).json("There are no posts.");
   } else {
     res.status(200)
         .json(posts);
